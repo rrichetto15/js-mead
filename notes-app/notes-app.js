@@ -1,4 +1,4 @@
-const notes = getSavedNotes();
+let notes = getSavedNotes();
 
 const filters = {
   searchText: '', 
@@ -7,13 +7,16 @@ const filters = {
 renderNotes(notes, filters);
 
 document.querySelector('#create-note').addEventListener('click', function (e) {
+  const id = uuidv4();
+
   notes.push({
+    id: id,
     title: '',
     body: ''
   });
 
   saveNotes(notes);
-  renderNotes(notes, filters);
+  location.assign(`/edit.html#${id}`);
 });
 
 document.querySelector('#search-text').addEventListener('input', function (e) {
@@ -23,4 +26,23 @@ document.querySelector('#search-text').addEventListener('input', function (e) {
 
 document.querySelector('#filter-by').addEventListener('change', function (e) {
   console.log(e.target.value);
-})
+});
+
+window.addEventListener('storage', function (e) {
+  if (e.key === 'notes') {
+    notes = JSON.parse(e.newValue);
+    renderNotes(notes, filters);
+  }
+});
+
+// const now = moment();
+// now.subtract(1, 'week').subtract(20, 'days');
+// console.log(now.format('MMMM Do, YYYY'));
+// console.log(now.fromNow());
+
+// const nowTimestamp = now.valueOf();
+// console.log(moment(nowTimestamp).toString());
+
+const birthday = moment();
+birthday.year(1991).month(10).date(27);
+console.log(birthday.format('MMM D, YYYY'));
